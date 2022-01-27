@@ -1,0 +1,1 @@
+{"version":3,"file":"loggers.js","sourceRoot":"","sources":["../../../src/PGB_server/middlewares/loggers.ts"],"names":[],"mappings":";;AAEA,MAAM,MAAM,GAAG,CAAC,GAAY,EAAE,GAAa,EAAE,IAAkB,EAAE,EAAE;IACjE,MAAM,MAAM,GAAG,GAAG,CAAC,MAAM,CAAC;IAC1B,OAAO,CAAC,GAAG,CAAC,sBAAsB,MAAM,UAAU,CAAC,CAAC;IACpD,IAAI,EAAE,CAAC;AACT,CAAC,CAAC;AAEF,kBAAe,MAAM,CAAC"}
