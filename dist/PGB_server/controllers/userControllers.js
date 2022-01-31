@@ -19,7 +19,7 @@ const userServices_1 = __importDefault(require("../services/userServices"));
 //POST/creates Users
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, username, country, postcode, email, password, address, sex, product = [], } = req.body;
+        const { firstName, lastName, username, country, postcode, email, password, address, sex, } = req.body;
         const user = new userModel_1.default({
             firstName,
             username,
@@ -30,7 +30,6 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             postcode,
             address,
             sex,
-            product,
         });
         const createdUser = yield userServices_1.default.createUser(user);
         res.json(createdUser);

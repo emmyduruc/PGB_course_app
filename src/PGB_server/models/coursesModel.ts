@@ -2,9 +2,8 @@ import mongoose, { Document } from "mongoose";
 
 export type CourseDocument = Document & {
   desc: string;
-  img: string;
-  videos: string;
-  lessons: [];
+  title: string;
+  modules: [];
 };
 
 const CourseSchema = new mongoose.Schema(
@@ -15,9 +14,9 @@ const CourseSchema = new mongoose.Schema(
     desc: {
       type: String,
     },
-    lessons: {
-      type: Array,
-      default: [],
+    modules: {
+      type: mongoose.Schema.Types.ObjectId, // Lessons property will be an array of objectId
+      ref: "Modules", //referencing to Lessons/model
     },
   },
   { timestamps: true }

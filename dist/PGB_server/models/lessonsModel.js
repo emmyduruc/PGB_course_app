@@ -4,17 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const CourseSchema = new mongoose_1.default.Schema({
-    img: {
-        type: String,
-    },
+const lessonSchema = new mongoose_1.default.Schema({
     desc: {
         type: String,
     },
-    modules: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Modules", //referencing to Lessons/model
+    title: {
+        type: String,
+    },
+    lessons: {
+        type: String,
+        required: true,
+        default: [],
     },
 }, { timestamps: true });
-exports.default = mongoose_1.default.model("Courses", CourseSchema);
-//# sourceMappingURL=coursesModel.js.map
+exports.default = mongoose_1.default.model("Lessons", lessonSchema);
+//# sourceMappingURL=lessonsModel.js.map

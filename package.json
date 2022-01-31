@@ -2,12 +2,12 @@
   "name": "newPgb",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node .",
     "ts-watch": "tsc -w",
+    "start": "nodemon --exec ts-node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,7 +19,9 @@
     "helmet": "^5.0.2",
     "mongoose": "^6.1.8",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "tsc-watch": "^4.6.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

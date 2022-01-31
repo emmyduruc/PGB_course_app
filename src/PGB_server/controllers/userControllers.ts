@@ -21,7 +21,6 @@ export const createUser = async (
       password,
       address,
       sex,
-      product = [],
     } = req.body;
     const user = new userModel({
       firstName,
@@ -33,7 +32,6 @@ export const createUser = async (
       postcode,
       address,
       sex,
-      product,
     });
     const createdUser = await userServices.createUser(user);
     res.json(createdUser);
