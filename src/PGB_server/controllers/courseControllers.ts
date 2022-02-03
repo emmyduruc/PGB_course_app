@@ -1,24 +1,24 @@
 import { Request, Response, NextFunction } from "express";
 import { BadRequestError } from "../helpers/errorHandlers";
 import Users from "../models/userModel";
-import lessonModel, { lessonDocument } from "../models/lessonsModel";
-import lessonService from "../services/lessonServices";
+import coursesModel, { CourseDocument } from "../models/coursesModel";
+import courseService from "../services/courseServices";
 
-//POST/creates lessons
-export const createLesson = async (
+//POST/creates course
+export const createCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { desc, title, lessons } = req.body;
-    const lesson = new lessonModel({
+    const { desc, title, module } = req.body;
+    const courses = new coursesModel({
       desc,
       title,
-      lessons,
+      module,
     });
-    const createdLesson = await lessonService.createLessons(lesson);
-    res.json(createdLesson);
+    const createdCourses = await courseService.createCourses(courses);
+    res.json(createdCourses);
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {
       next(new BadRequestError("Invalid Request", error));
@@ -29,16 +29,16 @@ export const createLesson = async (
 };
 
 //PUT
-export const updateLesson = async (
+export const updateCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const update = req.body;
-    const lessonId = req.params.lessonId;
-    const updatedLesson = await lessonService.updateLessons(lessonId, update);
-    res.json(updatedLesson);
+    const courseId = req.params.courseId;
+    const updatedCourse = await courseService.updateCourses(courseId, update);
+    res.json(updatedCourse);
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {
       next(new BadRequestError("Invalid Request", error));
@@ -48,14 +48,14 @@ export const updateLesson = async (
   }
 };
 
-// GET /lessons (gets all existing lesson)
-export const findAllLesson = async (
+// GET /courses (gets all existing lesson)
+export const findAllCourses = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.json(await lessonService.findAllLessons());
+    res.json(await courseService.findAllCourses());
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {
       next(new BadRequestError("Invalid Request", error));
@@ -72,7 +72,7 @@ export const findLessonById = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await lessonService.findAllLessonsById(req.params.lessonId));
+    res.json(await courseService.findAllCoursesById(req.params.courseId));
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {
       next(new BadRequestError("Invalid Request", error));
@@ -82,14 +82,14 @@ export const findLessonById = async (
   }
 };
 
-// DELETE /lesson/:lessonId //Delete an existing resource
-export const deleteLesson = async (
+// DELETE /course/:courseId //Delete an existing resource
+export const deleteCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await lessonService.deleteLessonById(req.params.lessonId);
+    await courseService.deleteCoursesById(req.params.courseId);
     res.status(204).end();
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {

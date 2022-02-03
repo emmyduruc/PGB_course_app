@@ -7,8 +7,8 @@ import {
 } from "../helpers/errorHandlers";
 
 //POST
-const createLessons = async (userDocument: lessonDocument) => {
-  const createdLessons = await userDocument.save();
+const createLessons = async (lessonDocument: lessonDocument) => {
+  const createdLessons = await lessonDocument.save();
   return createdLessons;
 };
 
@@ -53,7 +53,6 @@ const deleteLessonById = async (lessonId: string): Promise<lessonDocument> => {
   if (!foundLesson) {
     throw new NotFoundError(`Lesson ${lessonId} not found`);
   }
-
   return foundLesson;
 };
 
