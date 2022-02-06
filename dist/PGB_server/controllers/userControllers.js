@@ -16,16 +16,58 @@ exports.followUser = exports.deleteUser = exports.findUserById = exports.findAll
 const errorHandlers_1 = require("../helpers/errorHandlers");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const userServices_1 = __importDefault(require("../services/userServices"));
+// Our register logic starts here
+// try {
+//   // Get user input
+//   const { first_name, last_name, email, password } = req.body;
+//   // Validate user input
+//   if (!(email && password && first_name && last_name)) {
+//     res.status(400).send("All input is required");
+//   }
+//   // check if user already exist
+//   // Validate if user exist in our database
+//   const oldUser = await User.findOne({ email });
+//   if (oldUser) {
+//     return res.status(409).send("User Already Exist. Please Login");
+//   }
+//   //Encrypt user password
+//   encryptedPassword = await bcrypt.hash(password, 10);
+//   // Create user in our database
+//   const user = await User.create({
+//     first_name,
+//     last_name,
+//     email: email.toLowerCase(), // sanitize: convert email to lowercase
+//     password: encryptedPassword,
+//   });
+//   // Create token
+//   const token = jwt.sign(
+//     { user_id: user._id, email },
+//     process.env.TOKEN_KEY,
+//     {
+//       expiresIn: "2h",
+//     }
+//   );
+//   // save user token
+//   user.token = token;
+//   // return new user
+//   res.status(201).json(user);
+// } catch (err) {
+//   console.log(err);
+// }
+// // Our register logic ends here
+// });
+// // ...
 //POST/creates Users
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, username, country, postcode, email, password, address, sex, } = req.body;
+        const { firstName, lastName, username, country, postcode, email, password, token, address, sex, } = req.body;
         const user = new userModel_1.default({
             firstName,
             username,
             lastName,
             country,
             email,
+            token,
             password,
             postcode,
             address,
@@ -46,7 +88,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.createUser = createUser;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
         res.json(yield userServices_1.default.loginByEmail(req.body));
     }
     catch (error) {

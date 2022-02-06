@@ -65,8 +65,8 @@ export const findAllCourses = async (
   }
 };
 
-// GET /lesson/:lessonId //get the existing resource
-export const findLessonById = async (
+// GET /lesson/:courseId //get the existing resource
+export const findCourseById = async (
   req: Request,
   res: Response,
   next: NextFunction

@@ -11,10 +11,9 @@ const lessonSchema = new mongoose_1.default.Schema({
     title: {
         type: String,
     },
-    lessons: {
+    lesson: {
         type: String,
         required: true,
-        default: [],
     },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("Lessons", lessonSchema);

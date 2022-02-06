@@ -3,7 +3,7 @@ import mongoose, { Document } from "mongoose";
 export type lessonDocument = Document & {
   desc: string;
   title: string;
-  lessons: string;
+  lesson: string;
 };
 
 const lessonSchema = new mongoose.Schema(
@@ -14,7 +14,7 @@ const lessonSchema = new mongoose.Schema(
     title: {
       type: String,
     },
-    lessons: {
+    lesson: {
       type: String,
       required: true,
     },

@@ -28,6 +28,10 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const userRouter_1 = __importDefault(require("./PGB_server/routers/userRouter"));
+const lessonRouter_1 = __importDefault(require("./PGB_server/routers/lessonRouter"));
+const courseRouter_1 = __importDefault(require("./PGB_server/routers/courseRouter"));
+const moduleRouter_1 = __importDefault(require("./PGB_server/routers/moduleRouter"));
+const authentications_1 = require("./PGB_server/middlewares/authentications");
 dotenv.config();
 const port = process.env.PORT; // default port to listen
 mongoose_1.default
@@ -43,6 +47,10 @@ app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)("common"));
 app.use("/user", userRouter_1.default);
+app.use("/register", authentications_1.register);
+app.use("/lesson", lessonRouter_1.default);
+app.use("/course", courseRouter_1.default);
+app.use("/module", moduleRouter_1.default);
 // define a route handler for the default home page
 app.get("/", (req, res) => {
     res.send("Hello my finish world!");

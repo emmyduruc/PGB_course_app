@@ -7,6 +7,7 @@ import userRouter from "./PGB_server/routers/userRouter";
 import lessonRouter from "./PGB_server/routers/lessonRouter";
 import courseRouter from "./PGB_server/routers/courseRouter";
 import moduleRouter from "./PGB_server/routers/moduleRouter";
+import { register } from "./PGB_server/middlewares/authentications";
 
 dotenv.config();
 const port = process.env.PORT; // default port to listen
@@ -26,6 +27,7 @@ app.use(Helmet());
 app.use(morgan("common"));
 
 app.use("/user", userRouter);
+app.use("/register", register);
 app.use("/lesson", lessonRouter);
 app.use("/course", courseRouter);
 app.use("/module", moduleRouter);

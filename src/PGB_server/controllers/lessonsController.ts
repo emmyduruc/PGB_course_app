@@ -11,13 +11,13 @@ export const createLesson = async (
   next: NextFunction
 ) => {
   try {
-    const { desc, title, lessons } = req.body;
-    const lesson = new lessonModel({
+    const { desc, title, lesson } = req.body;
+    const lessons = new lessonModel({
       desc,
       title,
-      lessons,
+      lesson,
     });
-    const createdLesson = await lessonService.createLessons(lesson);
+    const createdLesson = await lessonService.createLessons(lessons);
     res.json(createdLesson);
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {

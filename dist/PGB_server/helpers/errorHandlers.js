@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BadRequestError = exports.UnauthorizedError = exports.InternalServerError = exports.ForbiddenError = exports.NotFoundError = void 0;
+exports.SuccessMessage = exports.BadRequestError = exports.UnauthorizedError = exports.InternalServerError = exports.ForbiddenError = exports.NotFoundError = void 0;
 class ApiError extends Error {
     constructor(statusCode, message, source) {
         super();
@@ -45,4 +45,11 @@ class BadRequestError extends ApiError {
     }
 }
 exports.BadRequestError = BadRequestError;
+class SuccessMessage extends ApiError {
+    constructor(message = "succesful", source) {
+        super(200, message, source);
+        this.message = message;
+    }
+}
+exports.SuccessMessage = SuccessMessage;
 //# sourceMappingURL=errorHandlers.js.map
