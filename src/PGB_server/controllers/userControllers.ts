@@ -3,89 +3,44 @@ import { BadRequestError } from "../helpers/errorHandlers";
 import Users from "../models/userModel";
 import userModel, { UserDocument } from "../models/userModel";
 import userServices from "../services/userServices";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-// Our register logic starts here
-// try {
-//   // Get user input
-//   const { first_name, last_name, email, password } = req.body;
-
-//   // Validate user input
-//   if (!(email && password && first_name && last_name)) {
-//     res.status(400).send("All input is required");
-//   }
-
-//   // check if user already exist
-//   // Validate if user exist in our database
-//   const oldUser = await User.findOne({ email });
-
-//   if (oldUser) {
-//     return res.status(409).send("User Already Exist. Please Login");
-//   }
-
-//   //Encrypt user password
-//   encryptedPassword = await bcrypt.hash(password, 10);
-
-//   // Create user in our database
-//   const user = await User.create({
-//     first_name,
-//     last_name,
-//     email: email.toLowerCase(), // sanitize: convert email to lowercase
-//     password: encryptedPassword,
-//   });
-
-//   // Create token
-//   const token = jwt.sign(
-//     { user_id: user._id, email },
-//     process.env.TOKEN_KEY,
-//     {
-//       expiresIn: "2h",
-//     }
-//   );
-//   // save user token
-//   user.token = token;
-
-//   // return new user
-//   res.status(201).json(user);
-// } catch (err) {
-//   console.log(err);
-// }
-// // Our register logic ends here
-// });
-
-// // ...
 //POST/creates Users
-export const createUser = async (
+export const register = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const {
-      firstName,
-      lastName,
+    const { firstname, lastname, email, password, username } = req.body;
+    if (!(email && password && firstname && lastname && username)) {
+      res.status(400).send("All input is required");
+    }
+    const oldUser = await Users.findOne({ email });
+    if (oldUser) {
+      return res.status(409).send("User Already Exist. Please Login");
+    }
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    const user = await Users.create({
+      firstname,
+      lastname,
+      email: email.toLowerCase(), // sanitize: convert email to lowercase
+      password: encryptedPassword,
       username,
-      country,
-      postcode,
-      email,
-      password,
-      token,
-      address,
-      sex,
-    } = req.body;
-    const user = new userModel({
-      firstName,
-      username,
-      lastName,
-      country,
-      email,
-      token,
-      password,
-      postcode,
-      address,
-      sex,
     });
-    const createdUser = await userServices.createUser(user);
-    res.json(createdUser);
+
+    const token = jwt.sign(
+      { user_id: user._id, email },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "2h",
+      }
+    );
+    // save user token
+    user.token = token;
+    res.status(201).json(user);
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {
       next(new BadRequestError("Invalid Request", error));
@@ -101,8 +56,26 @@ export const login = async (
   next: NextFunction
 ) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
-    res.json(await userServices.loginByEmail(req.body));
+    const { email, password } = req.body;
+
+    if (!(email && password)) {
+      res.status(400).send("All input is required");
+    }
+
+    const user = await Users.findOne({ email });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // Create token
+      const userToken = jwt.sign(
+        { user_id: user._id, email },
+        process.env.TOKEN_KEY,
+        { expiresIn: "2h" }
+      );
+      user.token = userToken;
+
+      return res.status(200).json(user);
+    }
+    res.status(400).send("Invalid Credentials");
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {
       next(new BadRequestError("Invalid Request", error));

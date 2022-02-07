@@ -1,7 +1,7 @@
 import express from "express";
 
 import {
-  createUser,
+  register,
   login,
   updateUser,
   findAllUser,
@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Every path we define here will get /api/v1/movies prefix
 
-router.post("/", createUser);
+router.post("/", register);
 router.get("/", findAllUser);
 router.post("/", adminCheck);
 router.post("/login", login);

@@ -3,14 +3,14 @@ import mongoose, { Document } from "mongoose";
 export type UserDocument = Document & {
   _Id: string; //do not specify it
   username: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   country: string;
   state: string;
   desc: string;
   city: string;
-  houseNumber: string;
-  phoneNumber?: string;
+  housenumber: string;
+  phonenumber?: string;
   postcode?: string;
   address: string;
   email: string;
@@ -29,10 +29,16 @@ export type UserDocument = Document & {
 
 const UserSchema = new mongoose.Schema(
   {
+    firstname: {
+      type: String,
+    },
+    lastname: {
+      type: String,
+    },
     username: {
       type: String,
-      require: true,
-      unique: true,
+      index: true,
+      sparse: true,
     },
     email: {
       type: String,

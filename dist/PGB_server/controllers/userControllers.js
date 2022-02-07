@@ -12,69 +12,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.followUser = exports.deleteUser = exports.findUserById = exports.findAllUser = exports.adminCheck = exports.updateUser = exports.login = exports.createUser = void 0;
+exports.followUser = exports.deleteUser = exports.findUserById = exports.findAllUser = exports.adminCheck = exports.updateUser = exports.login = exports.register = void 0;
 const errorHandlers_1 = require("../helpers/errorHandlers");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const userServices_1 = __importDefault(require("../services/userServices"));
-// Our register logic starts here
-// try {
-//   // Get user input
-//   const { first_name, last_name, email, password } = req.body;
-//   // Validate user input
-//   if (!(email && password && first_name && last_name)) {
-//     res.status(400).send("All input is required");
-//   }
-//   // check if user already exist
-//   // Validate if user exist in our database
-//   const oldUser = await User.findOne({ email });
-//   if (oldUser) {
-//     return res.status(409).send("User Already Exist. Please Login");
-//   }
-//   //Encrypt user password
-//   encryptedPassword = await bcrypt.hash(password, 10);
-//   // Create user in our database
-//   const user = await User.create({
-//     first_name,
-//     last_name,
-//     email: email.toLowerCase(), // sanitize: convert email to lowercase
-//     password: encryptedPassword,
-//   });
-//   // Create token
-//   const token = jwt.sign(
-//     { user_id: user._id, email },
-//     process.env.TOKEN_KEY,
-//     {
-//       expiresIn: "2h",
-//     }
-//   );
-//   // save user token
-//   user.token = token;
-//   // return new user
-//   res.status(201).json(user);
-// } catch (err) {
-//   console.log(err);
-// }
-// // Our register logic ends here
-// });
-// // ...
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //POST/creates Users
-const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, username, country, postcode, email, password, token, address, sex, } = req.body;
-        const user = new userModel_1.default({
-            firstName,
+        const { firstname, lastname, email, password, username } = req.body;
+        if (!(email && password && firstname && lastname && username)) {
+            res.status(400).send("All input is required");
+        }
+        const oldUser = yield userModel_1.default.findOne({ email });
+        if (oldUser) {
+            return res.status(409).send("User Already Exist. Please Login");
+        }
+        const encryptedPassword = yield bcryptjs_1.default.hash(password, 10);
+        const user = yield userModel_1.default.create({
+            firstname,
+            lastname,
+            email: email.toLowerCase(),
+            password: encryptedPassword,
             username,
-            lastName,
-            country,
-            email,
-            token,
-            password,
-            postcode,
-            address,
-            sex,
         });
-        const createdUser = yield userServices_1.default.createUser(user);
-        res.json(createdUser);
+        const token = jsonwebtoken_1.default.sign({ user_id: user._id, email }, process.env.TOKEN_KEY, {
+            expiresIn: "2h",
+        });
+        // save user token
+        user.token = token;
+        res.status(201).json(user);
     }
     catch (error) {
         if (error instanceof Error && error.name == "ValidationError") {
@@ -85,11 +53,21 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         }
     }
 });
-exports.createUser = createUser;
+exports.register = register;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, email, password } = req.body;
-        res.json(yield userServices_1.default.loginByEmail(req.body));
+        const { email, password } = req.body;
+        if (!(email && password)) {
+            res.status(400).send("All input is required");
+        }
+        const user = yield userModel_1.default.findOne({ email });
+        if (user && (yield bcryptjs_1.default.compare(password, user.password))) {
+            // Create token
+            const userToken = jsonwebtoken_1.default.sign({ user_id: user._id, email }, process.env.TOKEN_KEY, { expiresIn: "2h" });
+            user.token = userToken;
+            return res.status(200).json(user);
+        }
+        res.status(400).send("Invalid Credentials");
     }
     catch (error) {
         if (error instanceof Error && error.name == "ValidationError") {

@@ -17,9 +17,9 @@ const findOrCreate = async (userProfile: Profile) => {
     const newUser = await UsersModel.create({
       email,
       //eslint-disable-next-line
-      firstName: given_name,
+      firstname: given_name,
       //eslint-disable-next-line
-      lastName: family_name,
+      lastname: family_name,
       picture,
     });
     return newUser.save();

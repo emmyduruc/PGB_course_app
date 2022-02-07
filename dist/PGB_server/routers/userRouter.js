@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const userControllers_1 = require("../controllers/userControllers");
 const router = express_1.default.Router();
 // Every path we define here will get /api/v1/movies prefix
-router.post("/", userControllers_1.createUser);
+router.post("/", userControllers_1.register);
 router.get("/", userControllers_1.findAllUser);
 router.post("/", userControllers_1.adminCheck);
 router.post("/login", userControllers_1.login);

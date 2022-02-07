@@ -25,13 +25,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const userRouter_1 = __importDefault(require("./PGB_server/routers/userRouter"));
 const lessonRouter_1 = __importDefault(require("./PGB_server/routers/lessonRouter"));
 const courseRouter_1 = __importDefault(require("./PGB_server/routers/courseRouter"));
 const moduleRouter_1 = __importDefault(require("./PGB_server/routers/moduleRouter"));
-const authentications_1 = require("./PGB_server/middlewares/authentications");
+const googleLoginRouter_1 = __importDefault(require("./PGB_server/routers/googleLoginRouter"));
+const passport_1 = __importDefault(require("passport"));
+const passport_2 = require("./PGB_server/passport/passport");
 dotenv.config();
 const port = process.env.PORT; // default port to listen
 mongoose_1.default
@@ -43,17 +46,21 @@ mongoose_1.default
     console.log(` MongoDB failed to connect: ${error}`);
 });
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use(passport_1.default.initialize());
+passport_1.default.use(passport_2.googleStrategy);
+passport_1.default.use(passport_2.jwtStrategy);
 app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)("common"));
 app.use("/user", userRouter_1.default);
-app.use("/register", authentications_1.register);
 app.use("/lesson", lessonRouter_1.default);
 app.use("/course", courseRouter_1.default);
 app.use("/module", moduleRouter_1.default);
+app.use("/google_login", googleLoginRouter_1.default);
 // define a route handler for the default home page
 app.get("/", (req, res) => {
-    res.send("Hello my finish world!");
+    res.send("Hello welcome to PGB server!");
 });
 // start the Express server
 app.listen(port, () => {
