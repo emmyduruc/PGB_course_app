@@ -32,6 +32,9 @@ const UserSchema = new mongoose_1.default.Schema({
         max: 15,
         unique: true,
     },
+    token: {
+        type: String,
+    },
     profilePic: {
         type: String,
         default: "",

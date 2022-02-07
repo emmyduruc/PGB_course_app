@@ -31,6 +31,7 @@ export const register = async (
       return res.status(409).send("User Already Exist. Please Login");
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
+
     const user = await Users.create({
       firstName,
       lastName,
@@ -47,7 +48,6 @@ export const register = async (
     );
     // save user token
     user.token = token;
-
     res.status(201).json(user);
   } catch (error) {
     if (error instanceof Error && error.name == "ValidationError") {

@@ -23,6 +23,7 @@ export type UserDocument = Document & {
   followers: string[];
   relationship: number;
   coverPic: string;
+  token: string;
   role: string;
 };
 
@@ -54,6 +55,9 @@ const UserSchema = new mongoose.Schema(
       min: 7,
       max: 15,
       unique: true,
+    },
+    token: {
+      type: String,
     },
     profilePic: {
       type: String,

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
+exports.login = exports.register = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -49,7 +49,7 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
             expiresIn: "2h",
         });
         // save user token
-        //user.token = token;
+        user.token = token;
         res.status(201).json(user);
     }
     catch (error) {
@@ -62,4 +62,31 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.register = register;
+const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        if (!(email && password)) {
+            res.status(400).send("All input is required");
+        }
+        const user = yield userModel_1.default.findOne({ email });
+        if (user && (yield bcryptjs_1.default.compare(password, user.password))) {
+            // Create token
+            var userToken = jsonwebtoken_1.default.sign({ user_id: user._id, email }, process.env.TOKEN_KEY, {
+                expiresIn: "2h",
+            });
+            user.token = userToken;
+            res.status(201).json(user);
+        }
+        res.status(400).send("Invalid Credentials");
+    }
+    catch (error) {
+        if (error instanceof Error && error.name == "ValidationError") {
+            next(new errorHandlers_1.BadRequestError("Invalid Request", error));
+        }
+        else {
+            next(error);
+        }
+    }
+});
+exports.login = login;
 //# sourceMappingURL=authentications.js.map
